@@ -1,0 +1,6 @@
+#!/bin/bash
+cd uC
+avr-gcc -Wall -g -Os -mmcu=atmega8 wiesiek.c -o wiesiek.o
+avr-size -C wiesiek.o
+avr-objcopy -j .text -j .data -O ihex  wiesiek.o wiesiek.hex
+cd ..
