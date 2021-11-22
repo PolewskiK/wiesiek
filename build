@@ -1,4 +1,8 @@
 #!/bin/bash
+whereiam=$(pwd)
+rootFolder="${whereiam%wiesiek*}wiesiek"
+cd $rootFolder
+
 if [ ! -d uC ]; then 
 	echo "Tworzę uC"
 	mkdir uC
