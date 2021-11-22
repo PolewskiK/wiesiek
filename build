@@ -1,6 +1,43 @@
 #!/bin/bash
-cd uC
-avr-gcc -Wall -g -Os -mmcu=atmega8 wiesiek.c -o wiesiek.o
-avr-size -C wiesiek.o
-avr-objcopy -j .text -j .data -O ihex  wiesiek.o wiesiek.hex
-cd ..
+if [ ! -d uC ]; then 
+	echo "Tworzę uC"
+	mkdir uC
+fi
+if [ ! -d uC/src ]; then
+	echo "Tworzę uC/src"
+	mkdir uC/src
+fi
+if [ ! -d uC/bin ]; then
+	echo "Tworzę uC/bin"
+	mkdir uC/bin
+fi
+if [ ! -d uC/hex ]; then
+	echo "Tworzę uC/hex"
+	mkdir uC/hex
+fi
+
+function compile {
+	echo ""
+	echo "-------------------"
+	echo 'kompilacja pliku '$1
+	echo "-------------------"
+	echo ""
+	avr-gcc -Wall -g -Os -mmcu=atmega32 $1 -o $2
+	avr-size -C $2
+	avr-objcopy -j .text -j .data -O ihex  $2 $3
+}
+if [ ! -z $1 ]; then
+	filename="uC/src/${1}.c"
+	objname="uC/bin/${1}.o"
+	hexname="uC/hex/${1}.hex"
+	compile $filename $objname $hexname
+else
+	for file in uC/src/*.c; do
+		filename="$file"
+		objname="${file%.c}.o"
+		objname="uC/bin/${objname#uC/src/}"
+		hexname="${file%.c}.hex"
+		hexname="uC/hex/${hexname#uC/src/}"
+		compile $filename $objname $hexname
+	done
+fi
