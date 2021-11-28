@@ -8,6 +8,7 @@
 #define toggle(byte, bitNumber) (byte^=(1<<bitNumber))
 #define check(byte, bitNumber) (byte&(1<<bitNumber)&&1)
 
+
 void sleep(uint8_t ms)
 {
     while(ms)
@@ -19,11 +20,19 @@ void sleep(uint8_t ms)
 
 int main(void)
 {
-    DDRC |=1<<PC2;
+    DDRC |=1<<PC3;
+    DDRC |=1<<PC4;
+    DDRC |=1<<PC5;
     while (1)
     {
-        set(PORTC, PC2);
+        reset(PORTC, PC5);
+        set(PORTC, PC3);
         sleep(200);
-        reset(PORTC, PC2);
-    }
+        reset(PORTC, PC3);
+        set(PORTC, PC4);
+        sleep(200);
+        reset(PORTC, PC4);
+        set(PORTC, PC5);
+        sleep(200);
+    }   
 }
