@@ -14,5 +14,7 @@ if [ $arg = "write" ]; then
     echo ""
     echo ""
     avrdude -c linuxgpio -p m64 -v -U flash:w:uC/wiesiek.hex:i
+    rmmod spi_bcm2835
+    modprobe spi_bcm2835
 fi
 
