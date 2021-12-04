@@ -1,13 +1,87 @@
-#define F_CPU 16000000L
+#include "wiesiek.h"
 
-#include<avr/io.h>
-#include<util/delay.h>
+int8_t leftMotorCurrentSpeed, rightMotorCurrentSpeed, leftMotorSetSpeed, rightMotorSetSpeed;
 
-#define set(byte, bitNumber) (byte|=(1<<bitNumber))
-#define reset(byte, bitNumber) (byte&=~(1<<bitNumber))
-#define toggle(byte, bitNumber) (byte^=(1<<bitNumber))
-#define check(byte, bitNumber) (byte&(1<<bitNumber)&&1)
+void proceedMotorsState()
+{
+    if (leftMotorCurrentSpeed != leftMotorSetSpeed) 
+    {
+        updateLeftMotorSpeed(leftMotorSetSpeed);
+    }
+    if (rightMotorCurrentSpeed != rightMotorSetSpeed)
+    {
+        updateRightMotorSpeed(rightMotorSetSpeed);
+    }
+}
 
+void updateLeftMotorSpeed(const int8_t setSpeed)
+{
+    if (setSpeed == 0)
+    {
+        reset(PORTA, leftForward);
+        reset(PORTA, leftBackward);
+    }
+    else if (leftMotorCurrentSpeed >= 0 && setSpeed < 0)
+    {
+        reset(PORTA, leftForward);
+        set(PORTA, leftBackward);
+    }
+    else if (leftMotorCurrentSpeed <=0 && setSpeed > 0)
+    {
+        reset(PORTA, leftBackward);
+        set(PORTA, leftForward);
+    }
+    
+    leftMotorCurrentSpeed = setSpeed;
+    if (leftMotorCurrentSpeed >= 0)
+    {
+        leftPWM = leftMotorCurrentSpeed;
+    }
+    else
+    {
+        leftPWM = (leftMotorCurrentSpeed*(-1));
+    }
+}
+
+void updateRightMotorSpeed(const int8_t setSpeed)
+{
+    if (setSpeed == 0)
+    {
+        reset(PORTA, rightForward);
+        reset(PORTA, rightBackward);
+    }
+    else if (rightMotorCurrentSpeed >= 0 && setSpeed < 0)
+    {
+        reset(PORTA, rightForward);
+        set(PORTA, rightBackward);
+    }
+    else if (rightMotorCurrentSpeed <= 0 && setSpeed > 0)
+    {
+        reset(PORTA, rightBackward);
+        set(PORTA, rightForward);
+    }
+
+    rightMotorCurrentSpeed = setSpeed;
+    if (rightMotorCurrentSpeed >= 0)
+    {
+        rightPWM = rightMotorCurrentSpeed;
+    }
+    else
+    {
+        rightPWM = (rightMotorCurrentSpeed*(-1));
+    }
+}
+
+void init()
+{
+    DDRA = 0xFF;
+    DDRB = 0xF8;
+    DDRC = 0xFD;
+    DDRE = 0x10;
+    DDRG = 0xFF;
+    TCCR0 = 0x69;
+    TCCR2 = 0x69;
+}
 
 void sleep(uint8_t ms)
 {
@@ -20,19 +94,18 @@ void sleep(uint8_t ms)
 
 int main(void)
 {
-    DDRC |=1<<PC3;
-    DDRC |=1<<PC4;
-    DDRC |=1<<PC5;
+    init();
     while (1)
     {
-        reset(PORTC, PC5);
-        set(PORTC, PC3);
+        reset(PORTC, blueLed);
+        set(PORTC, greenLed);
         sleep(200);
-        reset(PORTC, PC3);
-        set(PORTC, PC4);
+        reset(PORTC, greenLed);
+        set(PORTC, redLed);
         sleep(200);
-        reset(PORTC, PC4);
-        set(PORTC, PC5);
+        reset(PORTC, redLed);
+        set(PORTC, blueLed);
         sleep(200);
+        proceedMotorsState();
     }   
 }
