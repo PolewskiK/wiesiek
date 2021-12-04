@@ -35,11 +35,11 @@ void updateLeftMotorSpeed(const int8_t setSpeed)
     leftMotorCurrentSpeed = setSpeed;
     if (leftMotorCurrentSpeed >= 0)
     {
-        leftPWM = leftMotorCurrentSpeed;
+        leftPWM = (leftMotorCurrentSpeed * 2.5);
     }
     else
     {
-        leftPWM = (leftMotorCurrentSpeed*(-1));
+        leftPWM = (leftMotorCurrentSpeed * (-2.5));
     }
 }
 
@@ -81,9 +81,10 @@ void init()
     DDRG = 0xFF;
     TCCR0 = 0x69;
     TCCR2 = 0x69;
+    sleep(500);
 }
 
-void sleep(uint8_t ms)
+void sleep(uint16_t ms)
 {
     while(ms)
     {
@@ -99,13 +100,13 @@ int main(void)
     {
         reset(PORTC, blueLed);
         set(PORTC, greenLed);
-        sleep(200);
+        sleep(500);
         reset(PORTC, greenLed);
         set(PORTC, redLed);
-        sleep(200);
+        sleep(500);
         reset(PORTC, redLed);
         set(PORTC, blueLed);
-        sleep(200);
+        sleep(500);
         proceedMotorsState();
     }   
 }

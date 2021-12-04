@@ -20,6 +20,6 @@
 void proceedMotorsState();
 void updateLeftMotorSpeed(const int8_t);
 void updateRightMotorSpeed(const int8_t);
-void sleep(uint8_t);
+void sleep(uint16_t);
 void init();
 
