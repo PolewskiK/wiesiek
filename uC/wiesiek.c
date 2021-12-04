@@ -35,11 +35,11 @@ void updateLeftMotorSpeed(const int8_t setSpeed)
     leftMotorCurrentSpeed = setSpeed;
     if (leftMotorCurrentSpeed >= 0)
     {
-        leftPWM = (leftMotorCurrentSpeed * 2.5);
+        leftPWM = (leftMotorCurrentSpeed * 2) + leftMotorOffset;
     }
     else
     {
-        leftPWM = (leftMotorCurrentSpeed * (-2.5));
+        leftPWM = (leftMotorCurrentSpeed * (-2)) + leftMotorOffset;
     }
 }
 
@@ -64,11 +64,11 @@ void updateRightMotorSpeed(const int8_t setSpeed)
     rightMotorCurrentSpeed = setSpeed;
     if (rightMotorCurrentSpeed >= 0)
     {
-        rightPWM = rightMotorCurrentSpeed;
+        rightPWM = (rightMotorCurrentSpeed * 2) + rightMotorOffset;
     }
     else
     {
-        rightPWM = (rightMotorCurrentSpeed*(-1));
+        rightPWM = (rightMotorCurrentSpeed* (-2)) + rightMotorOffset;
     }
 }
 

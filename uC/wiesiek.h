@@ -16,6 +16,8 @@
 #define leftBackward PA4
 #define leftPWM OCR0
 #define rightPWM OCR2
+#define rightMotorOffset 50
+#define leftMotorOffset 50
 
 void proceedMotorsState();
 void updateLeftMotorSpeed(const int8_t);
